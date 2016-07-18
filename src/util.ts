@@ -4,7 +4,11 @@
  * xxx is updated, this process will have to be repated 
  */
 
-import { Entity, Modifier, EditorState, RichUtils } from 'draft-js'
+import { 
+  Entity, ContentBlock,  
+  EditorState, SelectionState, 
+  Modifier, RichUtils 
+} from 'draft-js'
 
 import { KeyCodes as KC } from '@trystal/keys'
 import { BGS, FGS, FACES } from '@trystal/constants'
@@ -12,16 +16,16 @@ import { BGS, FGS, FACES } from '@trystal/constants'
 const {removeInlineStyle} = Modifier
 const {toggleInlineStyle} = RichUtils
 
-export function bindings(keyCode) {
+export function bindings(keyCode:KC) {
   switch (keyCode) {
     case KC.CTRLK: return 'strikethrough'
     default: return undefined
   }
 }
-export function isPartialKey(keyCode) {
+export function isPartialKey(keyCode:KC) {
   return [KC.CTRL1, KC.CTRLA, KC.CTRLS, KC.CTRLF, KC.CTRLH].indexOf(keyCode) >= 0
 }
-export function getSimpleBinding(keyCode) {
+export function getSimpleBinding(keyCode:KC) {
   switch (keyCode) {
     case KC.CTRLK: return 'strikethrough'
     case KC.CTRLL: return 'insert-link'
@@ -29,7 +33,7 @@ export function getSimpleBinding(keyCode) {
   }
   return null
 }
-export function getCompoundBinding(partialKey, keyCode) {
+export function getCompoundBinding(partialKey:KC, keyCode:KC) {
   switch (partialKey) {
     case KC.CTRL1:
       switch (keyCode) {
@@ -96,23 +100,23 @@ export const styleMap = {
   S4: { fontSize: '30px' },
   S5: { fontSize: '36px' }
 }
-export const addFieldReducer = (state, formula) => { // cmd === field-0 or field-1 ??
+export const addFieldReducer = (state:EditorState, formula:string) => { // cmd === field-0 or field-1 ??
   const key = Entity.create('FIELD', 'IMMUTABLE', { formula })
-  const newContentState = Modifier.insertText(state.getCurrentContent(), state.getSelection(), formula, null, key)
+  const newContentState = Modifier.insertText(state.getCurrentContent(), state.getSelection(), formula, undefined, key)
   return EditorState.push(state, newContentState, 'apply-entity')
 }
 
-export const addDefaultText = (editorState, defaultText) => {
+export const addDefaultText = (editorState:EditorState, defaultText:string) => {
   let selectionState = editorState.getSelection()
   if(!selectionState.isCollapsed()) return editorState
   const contentState = Modifier.insertText(editorState.getCurrentContent(), selectionState, defaultText + ' ')
   editorState = EditorState.push(editorState, contentState, 'insert-characters')
-  selectionState = selectionState.set('focusOffset',selectionState.getFocusOffset() + defaultText.length)
+  selectionState = <SelectionState>selectionState.set('focusOffset',selectionState.getFocusOffset() + defaultText.length)
   editorState = EditorState.acceptSelection(editorState, selectionState)
   return editorState
 }
 
-export const addLinkReducer = (editorState, urlValue) => {
+export const addLinkReducer = (editorState:EditorState, urlValue:string) => {
   editorState = addDefaultText(editorState, 'LINK')
   const key = Entity.create('LINK', 'MUTABLE', { url: urlValue }) // TS doesn't get that Entity.create returns a string
   return RichUtils.toggleLink(editorState, editorState.getSelection(), key)
@@ -123,15 +127,16 @@ const FGCODES = ['FG0', 'FG2', 'FG3', 'FG4', 'FG5']
 const SIZES = ['S1', 'S2', 'S3', 'S4', 'S5']
 const FAMS = ['F0', 'F1', 'F2']
 
-function getEm(format) {
+function getEm(format:string):string[] | null {
   if (/FG./.test(format)) return FGCODES
   if (/BG./.test(format)) return BGCODES
   if (/S./.test(format)) return SIZES
   if (/F./.test(format)) return FAMS
+  return null
 }
 
-export const setStyle = (state, style) => {
-  const REMOVES = getEm(style)
+export const setStyle = (state:EditorState, style:string) => {
+  const REMOVES = getEm(style) || []
   const selection = state.getSelection()
   const nextContentState = REMOVES.reduce(
     (contentState, style) => removeInlineStyle(contentState, selection, style),
@@ -139,12 +144,16 @@ export const setStyle = (state, style) => {
   )
   let newState = EditorState.push(state, nextContentState, 'change-inline-style')
   const currentStyle = state.getCurrentInlineStyle()
-  if (selection.isCollapsed()) newState = currentStyle.reduce((state, color) => toggleInlineStyle(state, color), newState)
+  if (selection.isCollapsed()) newState = currentStyle.reduce((state, color) => toggleInlineStyle(state!, color!), newState)
   if (!currentStyle.has(style)) newState = toggleInlineStyle(newState, style)
   return newState
 }
 
-export const findLinkEntities = (contentBlock, callback) => {
+export interface CB1 {
+  (start:number, end:number): void 
+}
+
+export const findLinkEntities = (contentBlock:ContentBlock, callback:CB1) => {
   contentBlock.findEntityRanges(
     character => {
       const entityKey = character.getEntity()
@@ -159,7 +168,7 @@ export const findLinkEntities = (contentBlock, callback) => {
 // continue with subtracting the editor out of the main code
 // have had to hack some of the defs because the typings are way out of date
 
-export const findFieldEntities = (contentBlock, callback) => {
+export const findFieldEntities = (contentBlock:ContentBlock, callback:CB1) => {
   contentBlock.findEntityRanges(
     character => {
       const entityKey = character.getEntity()

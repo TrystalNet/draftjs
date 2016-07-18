@@ -9,8 +9,8 @@
     "trystal",
     "linelo"
   ],
-  "main": "index.js",
-  "typings": "index.d.ts",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/TrystalNet/draftjs.git"
@@ -36,7 +36,7 @@
   "dependencies": {
     "@trystal/constants": "^1.0.0",
     "@trystal/interfaces": "^2.2.2",
-    "@trystal/keys": "^1.0.0",
+    "@trystal/keys": "^1.1.0",
     "@trystal/trystup": "^1.0.3",
     "@types/lodash": "^4.0.21-alpha",
     "@types/react": "^0.14.27",

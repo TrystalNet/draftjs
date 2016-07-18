@@ -5,8 +5,8 @@
     "noImplicitAny": true,
     "suppressImplicitAnyIndexErrors": true,
     "strictNullChecks": true,
-    "declaration": false,
-    "outDir": "..",
+    "declaration": true,
+    "outDir": "../dist",
     "jsx": "react"
   },
   "files": [
