@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "removeComments": true,
+    "noImplicitAny": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "strictNullChecks": true,
+    "declaration": false,
+    "outDir": "..",
+    "jsx": "react"
+  },
+  "files": [
+    "./index.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

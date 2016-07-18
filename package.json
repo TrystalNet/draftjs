@@ -1,0 +1,50 @@
+{
+  "name": "@trystal/draftjs",
+  "version": "1.1.3",
+  "description": "Integration of draftjs with trystal",
+  "homepage": "https://github.com/TrystalNet/trist-text#readme",
+  "author": "Terence O'Neill <terry.oneill@trystal.net>",
+  "contributors": [],
+  "keywords": [
+    "trystal",
+    "linelo"
+  ],
+  "main": "index.js",
+  "typings": "index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TrystalNet/draftjs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/TrystalNet/draftjs/issues"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jasmine": "^2.2.22-alpha",
+    "jasmine": "^2.4.1",
+    "source-map-loader": "^0.1.5",
+    "ts-loader": "^0.8.2",
+    "webpack": "^1.13.1"
+  },
+  "scripts": {
+    "prod": "tsc -p tsconfig.json",
+    "test": "tsc -p ./test/tsconfig.json"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "@trystal/constants": "^1.0.0",
+    "@trystal/interfaces": "^2.2.2",
+    "@trystal/keys": "^1.0.0",
+    "@trystal/trystup": "^1.0.3",
+    "@types/lodash": "^4.0.21-alpha",
+    "@types/react": "^0.14.27",
+    "@types/react-dom": "^0.14.13",
+    "draft-js": "^0.7.0",
+    "immutable": "^3.8.1",
+    "lodash": "^4.13.1",
+    "react": "^15.2.1",
+    "react-dom": "^15.2.1"
+  }
+}
