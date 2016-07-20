@@ -6,5 +6,3 @@ export { initEditorState };
 export { Link, LinkProps };
 export { Field, FieldProps };
 export { Util };
-
-
